@@ -28,13 +28,13 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/golang/glog"
 	"k8s.io/kops/protokube/pkg/etcd"
 	"k8s.io/kops/protokube/pkg/gossip"
 	gossipaws "k8s.io/kops/protokube/pkg/gossip/aws"
 	"k8s.io/kops/upup/pkg/fi/cloudup/awsup"
+        "k8s.io/kops/util/pkg/mfa"
 )
 
 var devices = []string{"/dev/xvdu", "/dev/xvdv", "/dev/xvdx", "/dev/xvdx", "/dev/xvdy", "/dev/xvdz"}
@@ -63,7 +63,7 @@ func NewAWSVolumes() (*AWSVolumes, error) {
 	config := aws.NewConfig()
 	config = config.WithCredentialsChainVerboseErrors(true)
 
-	s, err := session.NewSession(config)
+	s, err := mfa.NewSession(config)
 	if err != nil {
 		return nil, fmt.Errorf("error starting new AWS session: %v", err)
 	}

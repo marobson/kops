@@ -25,7 +25,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/autoscaling"
 	"github.com/aws/aws-sdk-go/service/autoscaling/autoscalingiface"
 	"github.com/aws/aws-sdk-go/service/cloudformation"
@@ -52,6 +51,7 @@ import (
 	"k8s.io/kops/pkg/resources/spotinst"
 	"k8s.io/kops/upup/pkg/fi"
 	k8s_aws "k8s.io/kubernetes/pkg/cloudprovider/providers/aws"
+        "k8s.io/kops/util/pkg/mfa"
 )
 
 // By default, aws-sdk-go only retries 3 times, which doesn't give
@@ -215,7 +215,7 @@ func NewAWSCloud(region string, tags map[string]string) (AWSCloud, error) {
 
 		requestLogger := newRequestLogger(2)
 
-		sess, err := session.NewSession(config)
+		sess, err := mfa.NewSession(config)
 		if err != nil {
 			return c, err
 		}
@@ -223,7 +223,7 @@ func NewAWSCloud(region string, tags map[string]string) (AWSCloud, error) {
 		c.cf.Handlers.Send.PushFront(requestLogger)
 		c.addHandlers(region, &c.cf.Handlers)
 
-		sess, err = session.NewSession(config)
+		sess, err = mfa.NewSession(config)
 		if err != nil {
 			return c, err
 		}
@@ -231,7 +231,7 @@ func NewAWSCloud(region string, tags map[string]string) (AWSCloud, error) {
 		c.ec2.Handlers.Send.PushFront(requestLogger)
 		c.addHandlers(region, &c.ec2.Handlers)
 
-		sess, err = session.NewSession(config)
+		sess, err = mfa.NewSession(config)
 		if err != nil {
 			return c, err
 		}
@@ -239,7 +239,7 @@ func NewAWSCloud(region string, tags map[string]string) (AWSCloud, error) {
 		c.iam.Handlers.Send.PushFront(requestLogger)
 		c.addHandlers(region, &c.iam.Handlers)
 
-		sess, err = session.NewSession(config)
+		sess, err = mfa.NewSession(config)
 		if err != nil {
 			return c, err
 		}
@@ -247,7 +247,7 @@ func NewAWSCloud(region string, tags map[string]string) (AWSCloud, error) {
 		c.elb.Handlers.Send.PushFront(requestLogger)
 		c.addHandlers(region, &c.elb.Handlers)
 
-		sess, err = session.NewSession(config)
+		sess, err = mfa.NewSession(config)
 		if err != nil {
 			return c, err
 		}
@@ -255,7 +255,7 @@ func NewAWSCloud(region string, tags map[string]string) (AWSCloud, error) {
 		c.elbv2.Handlers.Send.PushFront(requestLogger)
 		c.addHandlers(region, &c.elbv2.Handlers)
 
-		sess, err = session.NewSession(config)
+		sess, err = mfa.NewSession(config)
 		if err != nil {
 			return c, err
 		}
@@ -263,7 +263,7 @@ func NewAWSCloud(region string, tags map[string]string) (AWSCloud, error) {
 		c.autoscaling.Handlers.Send.PushFront(requestLogger)
 		c.addHandlers(region, &c.autoscaling.Handlers)
 
-		sess, err = session.NewSession(config)
+		sess, err = mfa.NewSession(config)
 		if err != nil {
 			return c, err
 		}

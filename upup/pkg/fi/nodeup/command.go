@@ -45,10 +45,10 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/request"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/golang/glog"
 	"k8s.io/apimachinery/pkg/util/sets"
+        "k8s.io/kops/util/pkg/mfa"
 )
 
 // MaxTaskDuration is the amount of time to keep trying for; we retry for a long time - there is not really any great fallback
@@ -386,7 +386,7 @@ func evaluateSecurityGroups(vpcId string) ([]string, error) {
 	config := aws.NewConfig()
 	config = config.WithCredentialsChainVerboseErrors(true)
 
-	s, err := session.NewSession(config)
+	s, err := mfa.NewSession(config)
 	if err != nil {
 		return nil, fmt.Errorf("error starting new AWS session: %v", err)
 	}

@@ -40,6 +40,7 @@ import (
 	"k8s.io/kops/upup/pkg/fi/cloudup/awsup"
 	"k8s.io/kops/upup/pkg/fi/nodeup/nodetasks"
 	"k8s.io/kops/util/pkg/reflectutils"
+	"k8s.io/kops/util/pkg/mfa"
 )
 
 const (
@@ -211,7 +212,7 @@ func (b *KubeletBuilder) buildSystemdEnvironmentFile(kubeletConfig *kops.Kubelet
 	}
 
 	if b.UsesSecondaryIP() {
-		sess := session.Must(session.NewSession())
+		sess := session.Must(mfa.NewSession())
 		metadata := ec2metadata.New(sess)
 		localIpv4, err := metadata.GetMetadata("local-ipv4")
 		if err != nil {

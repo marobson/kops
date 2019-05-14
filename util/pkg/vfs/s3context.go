@@ -26,10 +26,10 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/endpoints"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/golang/glog"
+        "k8s.io/kops/util/pkg/mfa"
 )
 
 var (
@@ -91,7 +91,7 @@ func (s *S3Context) getClient(region string) (*s3.S3, error) {
 			}
 		}
 
-		sess, err := session.NewSession(config)
+		sess, err := mfa.NewSession(config)
 		if err != nil {
 			return nil, fmt.Errorf("error starting new AWS session: %v", err)
 		}
@@ -265,7 +265,7 @@ func bruteforceBucketLocation(region *string, request *s3.GetBucketLocationInput
 	config := &aws.Config{Region: region}
 	config = config.WithCredentialsChainVerboseErrors(true)
 
-	session, err := session.NewSession(config)
+	session, err := mfa.NewSession(config)
 	if err != nil {
 		return nil, fmt.Errorf("error creating aws session: %v", err)
 	}
